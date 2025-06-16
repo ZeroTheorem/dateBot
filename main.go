@@ -16,8 +16,8 @@ const (
 	infoMsg2 = `🤵: Бусинка, наша свадьба 💍 через %s!
 Уже совсем скоро и люблю тебя больше жизни! ❤️
 
-	👰: Я тебя тоже очень люблю, Алексеюшка! ❤️
-Ура, ура, ура! Уже через %s или %s или %s!
+👰: Я тебя тоже очень люблю, Алексеюшка! ❤️
+
 `
 )
 
@@ -63,9 +63,7 @@ func main() {
 		since := married.Sub(now)
 		msg := fmt.Sprintf(infoMsg2,
 			pluralizeDays(int(since.Hours()/24)),
-			pluralizeHours(int(since.Hours())),
-			pluralizeMinutes(int(since.Minutes())),
-			pluralizeSeconds(int(since.Seconds())))
+		)
 		return c.Send(msg)
 	})
 	b.Start()
