@@ -13,6 +13,12 @@ const (
 	infoMsg  = `Ура солнышко! Мы вместе уже %s!
 А это - %s или %s или %s вместе!
 И я счаслив каждую наносекунду этого времени ❤️`
+	infoMsg2 = `🤵: Бусинка, наша свадьба 💍 через %s!
+Уже совсем скоро и люблю тебя больше жизни! ❤️
+
+	👰: Я тебя тоже очень люблю, Алексеюшка! ❤️
+Ура, ура, ура! Уже через %s или %s или %s!
+`
 )
 
 func main() {
@@ -35,6 +41,7 @@ func main() {
 
 	zone := time.FixedZone("UTC+3", 3*60*60)
 	start := time.Date(2024, time.November, 21, 9, 53, 0, 0, zone)
+	married := time.Date(2025, time.August, 22, 16, 30, 0, 0, zone)
 
 	b.Handle("/start", func(c tele.Context) error {
 		return c.Send(startMsg)
@@ -51,6 +58,16 @@ func main() {
 		return c.Send(msg)
 	})
 
+	b.Handle("/m", func(c tele.Context) error {
+		now := time.Now().In(zone)
+		since := married.Sub(now)
+		msg := fmt.Sprintf(infoMsg2,
+			pluralizeDays(int(since.Hours()/24)),
+			pluralizeHours(int(since.Hours())),
+			pluralizeMinutes(int(since.Minutes())),
+			pluralizeSeconds(int(since.Seconds())))
+		return c.Send(msg)
+	})
 	b.Start()
 }
 
