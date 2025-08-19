@@ -11,7 +11,6 @@ import (
 const (
 	startMsg = "Привет солнышко, клацай на левый нижний угол, а там все поймешь ❤️"
 	infoMsg  = `Ура солнышко! Мы вместе уже %s!
-А это - %s или %s или %s вместе!
 И я счаслив каждую наносекунду этого времени ❤️`
 	infoMsg2 = `🤵‍♂: Бусинка, наша свадьба 💍 через %s!
 Уже совсем скоро и люблю тебя больше жизни! ❤️
@@ -19,11 +18,17 @@ const (
 👰‍♀: Я тебя тоже очень люблю, Алексеюшка! ❤️
 
 `
+	infoMsg3 = `Пока что еще не прошло ни одного дня, но скоро их здесь будет бесконечное множество!
+я тебя люблю ❤️`
+	infoMsg4 = `Ура моя любимая жена! мы женаты 💍 уже целых %s
+А впереди у нас целая жизнь и даже больше)
+Бесконечность не предел ❤️
+`
 )
 
 func main() {
 	pref := tele.Settings{
-		Token:     "7206554373:AAFZTIlVyTuMfo7O7aYGNZqE_LOiLiPsw5c",
+		Token:     "8303161621:AAFz5p7NQPXbC9Jd4t5ePKNNH74KRY4s53g",
 		Poller:    &tele.LongPoller{Timeout: 10 * time.Second},
 		ParseMode: tele.ModeHTML,
 	}
@@ -35,9 +40,6 @@ func main() {
 	}
 
 	pluralizeDays := pluralize("день", "дня", "дней")
-	pluralizeHours := pluralize("час", "часа", "часов")
-	pluralizeMinutes := pluralize("минута", "минуты", "минут")
-	pluralizeSeconds := pluralize("секунда", "секунды", "секунд")
 
 	zone := time.FixedZone("UTC+3", 3*60*60)
 	start := time.Date(2024, time.November, 21, 9, 53, 0, 0, zone)
@@ -52,9 +54,7 @@ func main() {
 		since := now.Sub(start)
 		msg := fmt.Sprintf(infoMsg,
 			pluralizeDays(int(since.Hours()/24)),
-			pluralizeHours(int(since.Hours())),
-			pluralizeMinutes(int(since.Minutes())),
-			pluralizeSeconds(int(since.Seconds())))
+		)
 		return c.Send(msg)
 	})
 
@@ -62,6 +62,19 @@ func main() {
 		now := time.Now().In(zone)
 		since := married.Sub(now)
 		msg := fmt.Sprintf(infoMsg2,
+			pluralizeDays(int(since.Hours()/24)),
+		)
+		return c.Send(msg)
+	})
+
+	b.Handle("/alm", func(c tele.Context) error {
+		now := time.Now().In(zone)
+		since := now.Sub(married)
+		switch {
+		case since <= 0:
+			return c.Send(infoMsg3)
+		}
+		msg := fmt.Sprintf(infoMsg4,
 			pluralizeDays(int(since.Hours()/24)),
 		)
 		return c.Send(msg)
