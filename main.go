@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	tele "gopkg.in/telebot.v4"
@@ -12,12 +13,6 @@ const (
 	startMsg = "Привет солнышко, клацай на левый нижний угол, а там все поймешь ❤️"
 	infoMsg  = `Ура солнышко! Мы вместе уже %s!
 И я счаслив каждую наносекунду этого времени ❤️`
-	infoMsg2 = `🤵‍♂: Бусинка, наша свадьба 💍 через %s!
-Уже совсем скоро и люблю тебя больше жизни! ❤️
-
-👰‍♀: Я тебя тоже очень люблю, Алексеюшка! ❤️
-
-`
 	infoMsg3 = `Пока что еще не прошло ни одного дня, но скоро их здесь будет бесконечное множество!
 я тебя люблю ❤️`
 	infoMsg4 = `Ура моя любимая жена! мы женаты 💍 уже целых %s
@@ -28,7 +23,7 @@ const (
 
 func main() {
 	pref := tele.Settings{
-		Token:     "8303161621:AAFz5p7NQPXbC9Jd4t5ePKNNH74KRY4s53g",
+		Token:     os.Getenv("TKN"),
 		Poller:    &tele.LongPoller{Timeout: 10 * time.Second},
 		ParseMode: tele.ModeHTML,
 	}
@@ -53,15 +48,6 @@ func main() {
 		now := time.Now().In(zone)
 		since := now.Sub(start)
 		msg := fmt.Sprintf(infoMsg,
-			pluralizeDays(int(since.Hours()/24)),
-		)
-		return c.Send(msg)
-	})
-
-	b.Handle("/m", func(c tele.Context) error {
-		now := time.Now().In(zone)
-		since := married.Sub(now)
-		msg := fmt.Sprintf(infoMsg2,
 			pluralizeDays(int(since.Hours()/24)),
 		)
 		return c.Send(msg)
