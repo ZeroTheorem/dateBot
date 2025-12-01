@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
+	tele "gopkg.in/telebot.v4"
 	"log"
 	"os"
 	"time"
-
-	tele "gopkg.in/telebot.v4"
 )
 
 const (
@@ -22,8 +22,12 @@ const (
 )
 
 func main() {
+	err := godotenv.Load("env.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	pref := tele.Settings{
-		Token:     os.Getenv("TKN"),
+		Token:     os.Getenv("TOKKEN"),
 		Poller:    &tele.LongPoller{Timeout: 10 * time.Second},
 		ParseMode: tele.ModeHTML,
 	}
